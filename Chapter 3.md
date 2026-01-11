@@ -90,7 +90,7 @@ Produkty
 | 1002          | P001        | iPhone 14      | 4199.00         | 1     |
 | 1003          | P007        | Ładowarka 20W  | 129.00          | 3     |
 
-Następnie podzielimy ją na 3 odrębne tabele, dzięki czemu nie będzie powtórzeń.
+Następnie podzielimy ją na 2 odrębne tabele, dzięki czemu nie będzie powtórzeń.
 Tabela Produkty
 
 | id_produktu | nazwa               | cena_katalogowa |
@@ -171,3 +171,77 @@ To samo dotyczy nazwy przedmiotu i jego ceny ale zignorujmy to na razie (Załó�
 | Miejsce na dysku (dużo faktur)             | bardzo dużo duplikacji                 | wielokrotnie mniej                 |
 | Ryzyko niekonsekwentnych danych adresowych | bardzo wysokie                         | praktycznie zerowe                 |
 | Łatwość raportowania „klienci z Warszawy”  | trzeba parsować wszystkie wiersze      | proste zapytanie po tabeli Klienci |
+
+
+## Postać BCNF 
+Każdy determinant w tabeli musi być kluczem kandydatem.
+Innymi słowy:
+Jeśli A → B (A wyznacza B), to A musi być kluczem superkluczem (czyli zawierać jakiś klucz kandydacki).
+
+Grafik_pokoi
+| id_pokoju | dzień_tygodnia | godzina_początku | specjalizacja | lekarz_nazwisko | nr_licencji |
+|-----------|----------------|------------------|---------------|-----------------|-------------|
+| P-12      | Poniedziałek   | 08:00            | Kardiologia   | Nowak           | PL-45678    |
+| P-12      | Poniedziałek   | 11:00            | Kardiologia   | Nowak           | PL-45678    |
+| P-12      | Wtorek         | 08:00            | Endokrynologia| Malinowski      | PL-91234    |
+| P-15      | Poniedziałek   | 08:00            | Neurologia    | Kowalski        | PL-56789    |
+
+Klucze kandydackie:
+
+{id_pokoju, dzień_tygodnia, godzina_początku}  
+{lekarz_nazwisko, dzień_tygodnia, godzina_początku}   ← drugi, mniej oczywisty
+
+Zależności funkcyjne:
+
+id_pokoju, dzień_tygodnia, godzina_początku → specjalizacja, lekarz_nazwisko, nr_licencji  
+__lekarz_nazwisko → specjalizacja, nr_licencji__     ← problem!
+
+lekarz_nazwisko __nie jest__ kluczem kandydackim,
+ale jest __determinantem → naruszenie BCNF__ 
+(determinuje licencję lekarza (nwm czy to nie jest naruszenie 3NF, gubię się lekko))
+
+Wersja poprawiona
+1. Lekarze
+
+| lekarz_nazwisko | specjalizacja   | nr_licencji  |
+|-----------------|-----------------|--------------|
+| Nowak           | Kardiologia     | PL-45678     |
+| Malinowski      | Endokrynologia  | PL-91234     |
+| Kowalski        | Neurologia      | PL-56789     |
+
+2. Grafik (główny)
+
+| id_pokoju | dzień_tygodnia | godzina_początku | lekarz_nazwisko |
+|-----------|----------------|------------------|-----------------|
+| P-12      | Poniedziałek   | 08:00            | Nowak           |
+| P-12      | Poniedziałek   | 11:00            | Nowak           |
+| P-12      | Wtorek         | 08:00            | Malinowski      |
+| P-15      | Poniedziałek   | 08:00            | Kowalski        |
+
+3. Pokoje (opcjonalnie – jeśli chcemy mieć dodatkowe informacje o pokojach)
+
+
+| id_pokoju | piętro | budynek | powierzchnia_m² |
+|-----------|--------|---------|-----------------|
+| P-12      | 1      | A       | 18              |
+| P-15      | 2      | A       | 22              |
+
+|              Sytuacja / operacja              |          3NF (jedna tabela)         |             BCNF (rozbite)             |
+|:---------------------------------------------:|:-----------------------------------:|:--------------------------------------:|
+| Zmiana specjalizacji lekarza                  | trzeba zmienić wiele wierszy        | 1 miejsce – tabela Lekarze             |
+| Dodanie nowego lekarza bez grafiku            | niemożliwe lub trzeba wpisać NULL-e | normalna operacja                      |
+| Anomalia wstawiania (nowy lekarz bez grafiku) | występuje                           | wyeliminowana                          |
+| Anomalia usuwania (ostatni grafik lekarza)    | usuwasz specjalizację i licencję    | nie ma problemu                        |
+| Złożoność zapytań                             | prostsze                            | nieco bardziej złożone (więcej joinów) |
+
+Kiedy najczęściej spotykamy problem BCNF w praktyce?
+
+Tabele typu „osoba → zespół → kierownik zespołu”  
+„pokój → dzień → godzina → lekarz → specjalizacja”  
+„projekt → faza → osoba odpowiedzialna za fazę”  
+„samochód → kierowca → kategoria prawa jazdy”  
+„klient → oddział → region / kierownik oddziału”  
+
+### Bardzo praktyczna reguła-pamiątka:
+Jeśli w tabeli jest więcej niż jeden sensowny sposób na jej unikalne zidentyfikowanie (więcej niż jeden klucz kandydacki)
+→ prawie zawsze warto sprawdzić, czy nie ma naruszenia BCNF.
