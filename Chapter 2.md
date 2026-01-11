@@ -180,13 +180,13 @@ Rozróżnia się dwa typy nan :
 
 Zapisywane są one w ten sposób : 
 <p align="center">
-  <img src="./image/chapter2_sNan_Nan.png" alt="Sublime's custom image"/>
+  <img src="https://github.com/zbarek12345/Obrona/blob/main/image/chapter2_sNan_Nan.png?raw=true" alt="Sublime's custom image"/>
 </p>
 
 A sama wartość NaN może zostać spowodowana przez opisane w następnej tabeli działania arytmetyczne, oraz przez próby wykonania kolejnych działań z użyciem wartości NaN.
 
 <p align="center">
-  <img src="./image/chapter2_nan_table.png" alt="Sublime's custom image"/>
+  <img src="https://github.com/zbarek12345/Obrona/blob/main/image/chapter2_Nan_Table.png?raw=true" alt="Sublime's custom image"/>
 </p>
 
 Rozmiary standardowych zmiennych zmienno-przecinkowych można zobaczyć w poniższej tabeli wraz z rozmiarami ich mantys oraz wykładników, a także dokładmnościami.
