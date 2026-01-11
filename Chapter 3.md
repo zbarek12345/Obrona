@@ -178,6 +178,7 @@ Każdy determinant w tabeli musi być kluczem kandydatem.
 Innymi słowy:
 Jeśli A → B (A wyznacza B), to A musi być kluczem superkluczem (czyli zawierać jakiś klucz kandydacki).
 
+### Przykład 
 Grafik_pokoi
 | id_pokoju | dzień_tygodnia | godzina_początku | specjalizacja | lekarz_nazwisko | nr_licencji |
 |-----------|----------------|------------------|---------------|-----------------|-------------|
@@ -198,9 +199,10 @@ __lekarz_nazwisko → specjalizacja, nr_licencji__     ← problem!
 
 lekarz_nazwisko __nie jest__ kluczem kandydackim,
 ale jest __determinantem → naruszenie BCNF__ 
-(determinuje licencję lekarza (nwm czy to nie jest naruszenie 3NF, gubię się lekko))
+(determinuje licencję lekarza (Błąd w tej tabeli jest jednocześnie naruszeniem 3NF))
 
-Wersja poprawiona
+### Wersja poprawiona
+
 1. Lekarze
 
 | lekarz_nazwisko | specjalizacja   | nr_licencji  |
@@ -234,6 +236,46 @@ Wersja poprawiona
 | Anomalia usuwania (ostatni grafik lekarza)    | usuwasz specjalizację i licencję    | nie ma problemu                        |
 | Złożoność zapytań                             | prostsze                            | nieco bardziej złożone (więcej joinów) |
 
+### Drugi przykład BCNF
+
+| Student      | Kurs       | Nauczyciel     |
+|--------------|------------|----------------|
+| Jan Kowalski | Matematyka | Prof. Iksiński |
+| Anna Nowak   | Matematyka | Prof. Iksiński |
+| Jan Kowalski | Fizyka     | Dr Ygrekowski  |
+| Tomek Zając  | Matematyka | Mgr Wiśniewski |
+| Maria Kot    | Matematyka | Mgr Wiśniewski |
+
+Dlaczego jest to problem (Dlaczego to nie jest BCNF?)? 
+
+Klucz kandydujący A: {Student, Kurs} (Znając studenta i kurs, wiemy kto go uczy).
+
+Klucz kandydujący B: {Student, Nauczyciel} (Znając studenta i nauczyciela, wiemy na jaki kurs chodzi, bo nauczyciel uczy tylko jednego).
+
+__Problem__: Spójrzmy na kolumny Nauczyciel i Kurs. Widzimy zależność: Prof. Iksiński → Matematyka.  
+Informacja "Prof. Iksiński uczy Matematyki" jest powtórzona w wierszu 1 i 2. Nauczyciel jest determinantą (decyduje o kursie), ale nie jest kluczem (sam "Prof. Iksiński" nie identyfikuje unikalnie wiersza, bo uczy wielu studentów).
+
+Rozwiązanie:
+
+Tabela __Nauczyciel_Kurs__
+| Nauczyciel (PK) | Kurs       |
+|-----------------|------------|
+| Prof. Iksiński  | Matematyka |
+| Dr Ygrekowski   | Fizyka     |
+| Mgr Wiśniewski  | Matematyka |
+| Prof. Zet       | Historia   |
+| Maria Kot       | Matematyka |
+
+Tabela __Student_Nauczyciel__
+| Student (PK) | Nauczyciel (PK, FK) |
+|--------------|---------------------|
+| Jan Kowalski | Prof. Iksiński      |
+| Anna Nowak   | Prof. Iksiński      |
+| Jan Kowalski | Dr Ygrekowski       |
+| Tomek Zając  | Mgr Wiśniewski      |
+| Maria Kot    | Mgr Wiśniewski      |
+
+
 Kiedy najczęściej spotykamy problem BCNF w praktyce?
 
 Tabele typu „osoba → zespół → kierownik zespołu”  
@@ -245,3 +287,152 @@ Tabele typu „osoba → zespół → kierownik zespołu”
 ### Bardzo praktyczna reguła-pamiątka:
 Jeśli w tabeli jest więcej niż jeden sensowny sposób na jej unikalne zidentyfikowanie (więcej niż jeden klucz kandydacki)
 → prawie zawsze warto sprawdzić, czy nie ma naruszenia BCNF.
+
+# Czwarta postać normalna (4NF)
+rozwiązuje problem wielowartościowych zależności (multi-valued dependencies, MVD),
+które mogą występować nawet w tabelach będących w BCNF.  
+
+## Kiedy tabela jest w 4NF?
+Tabela jest w 4NF wtedy i tylko wtedy, gdy każda nietrywialna wielowartościowa zależność
+jest konsekwencją klucza kandydata (czyli w praktyce – gdy nie ma „niezależnych” grup wielokrotnych faktów w tej samej tabeli).  
+
+__Najprostsza intuicja__:
+Jeśli jeden wiersz reprezentuje niezależne kombinacje dwóch (lub więcej) zbiorów wartości,
+to najprawdopodobniej powinniśmy to rozbić na osobne tabele.
+### Klasyczny, bardzo czytelny przykład biznesowy
+__Sytuacja__:
+Firma prowadzi szkolenia.
+Każdy trener może prowadzić wiele tematów.
+Każdy trener może współpracować z wieloma firmami-kontrahentami.
+
+| id_trenera | imię_trenera | temat_szkolenia          | firma_kontrahent     |
+|------------|--------------|---------------------------|-----------------------|
+| T001       | Anna Malinowska | SQL Zaawansowany         | ABC Tech Sp. z o.o.   |
+| T001       | Anna Malinowska | SQL Zaawansowany         | Nowe Rozwiązania SA   |
+| T001       | Anna Malinowska | Power BI od podstaw      | ABC Tech Sp. z o.o.   |
+| T001       | Anna Malinowska | Power BI od podstaw      | MegaKorp Sp. z o.o.   |
+| T002       | Marek Nowak     | Python dla analityków    | FuturSoft             |
+| T002       | Marek Nowak     | Python dla analityków    | DataVision            |
+
+To klasyczna wielowartościowa zależność (MVD):  
+id_trenera →→ temat_szkolenia  
+id_trenera →→ firma_kontrahent
+
+### Rozwiązanie
+1. Trenerzy
+   
+| id_trenera | imię_trenera    |
+|------------|-----------------|
+| T001       | Anna Malinowska |
+| T002       | Marek Nowak     |
+
+2. Trener_Tematy
+
+| id_trenera | temat_szkolenia          |
+|------------|---------------------------|
+| T001       | SQL Zaawansowany         |
+| T001       | Power BI od podstaw      |
+| T001       | Azure Data Factory       |
+| T002       | Python dla analityków    |
+
+3. Trener_Kontrahenci
+
+| id_trenera | firma_kontrahent       |
+|------------|-------------------------|
+| T001       | ABC Tech Sp. z o.o.     |
+| T001       | Nowe Rozwiązania SA     |
+| T001       | MegaKorp Sp. z o.o.     |
+| T002       | FuturSoft               |
+| T002       | DataVision              |
+
+|                  Operacja / problem                  |         Przed 4NF (jedna tabela)        |      Po 4NF (trzy tabele)     |
+|:----------------------------------------------------:|:---------------------------------------:|:-----------------------------:|
+| Dodanie nowego tematu przez trenera                  | trzeba dodać wiersze dla każdej firmy   | 1 wiersz w Trener_Tematy      |
+| Dodanie nowego kontrahenta dla trenera               | trzeba dodać wiersze dla każdego tematu | 1 wiersz w Trener_Kontrahenci |
+| Anomalia wstawiania (nowy temat bez kontrahenta)     | występuje                               | wyeliminowana                 |
+| Anomalia usuwania (ostatni temat danego kontrahenta) | usuwasz też informację o kontrahencie   | brak problemu                 |
+| Rozmiar bazy przy dużej liczbie tematów i firm       | ogromna redundancja (kartezjańska)      | liniowy wzrost                |
+| Łatwość zmiany nazwy tematu                          | wiele miejsc                            | jedno miejsce                 |
+
+# Piąta postać normalna (5NF)
+Piąta postać normalna jest ostatnim „klasycznym” poziomem normalizacji i rozwiązuje bardzo specyficzny problem:
+Nie można wiarygodnie odtworzyć oryginalnej tabeli
+poprzez złączenie (join) jej projekcji,
+jeśli oryginalna tabela zawierała informacje o cyklicznych/zależnych kombinacjach trzech lub więcej atrybutów.
+
+## Klasyczny przykład biznesowy – Zaopatrzenie / Dostawcy / Części / Projekty
+
+__Sytuacja biznesowa__:
+Firma produkcyjna korzysta z wielu dostawców.
+Każdy dostawca dostarcza określone części.
+Każdy projekt wymaga określonych części.
+Istnieje reguła biznesowa:
+„Jeśli dany dostawca dostarcza daną część i dany projekt wymaga danej części,
+to ten dostawca może dostarczać tę część na ten projekt”.
+
+Dostawy_części_projekty     ← tabela NIE w 5NF
+| dostawca   | część     | projekt   |
+|------------|-----------|-----------|
+| D1         | C100      | P01       |
+| D1         | C100      | P02       |
+| D1         | C200      | P01       |
+| D2         | C100      | P02       |
+| D2         | C300      | P03       |
+
+### Zależności (reguły biznesowe):
+
+Dostawca dostarcza część:  
+D1 → C100, C200  
+D2 → C100, C300  
+
+Projekt wymaga części:  
+P01 → C100, C200  
+P02 → C100  
+P03 → C300  
+
+### Rozwiązanie: 
+1. Dostawca_Część
+
+| dostawca   | część     |
+|------------|-----------|
+| D1         | C100      |
+| D1         | C200      |
+| D2         | C100      |
+| D2         | C300      |
+
+2. Część_Projekt
+
+| część     | projekt   |
+|-----------|-----------|
+| C100      | P01       |
+| C100      | P02       |
+| C200      | P01       |
+| C300      | P03       |
+
+3. Dostawca_Projekt   (opcjonalna, ale często potrzebna w praktyce)
+
+| dostawca   | projekt   |
+|------------|-----------|
+| D1         | P01       |
+| D1         | P02       |
+| D2         | P02       |
+| D2         | P03       |
+
+Po rozbiciu na te trzy tabele:
+
+- Możemy swobodnie dodawać/usuwać fakty o tym kto co dostarcza, co jest potrzebne w projekcie i kto z kim współpracuje  
+- Oryginalna tabela (Dostawca, Część, Projekt) jest odtworzeniem (joinem) tych trzech tabel  
+- Nie ma już anomalii aktualizacji przy zmianie któregokolwiek z tych trzech rodzajów faktów
+
+|                     Sytuacja                    | Czy 4NF wystarczy? | Czy potrzebna 5NF? |                  Przyczyna                  |
+|:-----------------------------------------------:|:------------------:|:------------------:|:-------------------------------------------:|
+| Trener – tematy – kontrahenci                   | Tak                | Nie                | dwie niezależne wielowartościowe zależności |
+| Dostawca – część – projekt (z regułą cykliczną) | Tak                | Tak                | cykliczna zależność trzech predykatów       |
+| Pracownik – umiejętność – projekt               | Często tak         | Często tak         | bardzo częsty realny przypadek w IT         |
+| Lekarz – specjalizacja – oddział                | Zazwyczaj nie      | Czasami tak        | zależy od reguł biznesowych                 |
+| Produkt – cecha – rynek docelowy                | Często tak         | Bardzo często tak  | klasyczny przypadek e-commerce/B2B          |
+
+Większość firm zatrzymuje się na 3NF/BCNF.  
+4NF robi się w 15–25% bardziej złożonych modeli.  
+5NF naprawdę wprowadza się głównie tam, gdzie występują bardzo kosztowne błędy biznesowe przy aktualizacji cyklicznych zależności (branże: produkcja, IT projekty, logistyka, lotnictwo, automotive).  
+Chcesz zobaczyć porównanie rozmiaru bazy i liczby wierszy przy 4NF vs 5NF na większym zbiorze danych?
