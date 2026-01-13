@@ -1,1 +1,5 @@
-[mkdnlink]: ./Chapter%201.md
+[mkdnlink]: (https://raw.githubusercontent.com/zbarek12345/Obrona/refs/heads/main/Chapter%201.md)
+[mkdnlink]: (https://raw.githubusercontent.com/zbarek12345/Obrona/refs/heads/main/Chapter%202.md)
+[mkdnlink]: (https://raw.githubusercontent.com/zbarek12345/Obrona/refs/heads/main/Chapter%203.md)
+[mkdnlink]: (https://raw.githubusercontent.com/zbarek12345/Obrona/refs/heads/main/Chapter%204.md)
+[mkdnlink]: (https://raw.githubusercontent.com/zbarek12345/Obrona/refs/heads/main/Chapter%205.md)
