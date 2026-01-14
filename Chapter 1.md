@@ -1,4 +1,4 @@
-### Paradygmat programowania obiektowego (OOP)
+# Paradygmaty programowania obiektowego (OOP)
 
 Programowanie obiektowe (ang. Object-Oriented Programming, OOP) jest jednym z najpopularniejszych paradygmatów programowania. Polega na modelowaniu rzeczywistości za pomocą **obiektów**, które są instancjami **klas**. Klasa definiuje szablon zawierający **atrybuty** (dane, stan) oraz **metody** (zachowania, operacje na danych). Obiekty komunikują się ze sobą poprzez wysyłanie wiadomości (wywoływanie metod).
 
