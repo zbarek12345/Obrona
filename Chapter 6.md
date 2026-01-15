@@ -192,5 +192,3 @@ Zastosowanie: Zarządzanie dużą dokumentacją i pokazywanie zależności międ
 Symbol: Kształt przypominający zakładkę w segregatorze.  
 ![Diagram Pakietów](https://online.visual-paradigm.com/repository/images/88031adf-45b4-4587-baf8-0a4b2af2f702/package-diagram-design/uml-package-diagram-example-general-business-system.png)
 
-
-## 
