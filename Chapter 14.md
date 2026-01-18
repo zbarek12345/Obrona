@@ -225,3 +225,58 @@ Godot i Unity to dwa popularne silniki dla indie i średnich produkcji, ale ró�
 | **Główne fokus**      | 2D, prostota                          | Zrównoważone 2D/3D                           | Nowoczesna grafika, skalowalność, otwartość        | Stabilność, multiplayer, AI, high-end produkcje    |
 
 Godot 4.x to dojrzały silnik, idealny dla indie i średnich projektów – szczególnie jeśli cenisz wolność i lekkość. Unity 6 wygrywa w dużych, high-end 3D produkcjach z gotowymi narzędziami multiplayer/AI. Przejście z 3 na 4 wymaga migracji (niekompatybilne projekty), ale warto dla nowych możliwości.
+
+### Unreal Engine 4 (2014–2022, ostatnia główna wersja 4.27)
+
+Unreal Engine 4 był rewolucyjny w momencie premiery – przeszedł na model subskrypcyjny (później royalty 5% po przekroczeniu progu), oferując wysoką jakość grafiki AAA dla szerszego grona deweloperów. To silnik, na którym powstały hity jak *Fortnite*, *Gears of War 4*, *Final Fantasy VII Remake* czy wiele indie.
+
+Kluczowe cechy:
+- **Blueprint Visual Scripting** – system node-based bez kodowania, idealny dla designerów i prototypowania.
+- **Physically Based Rendering (PBR)** – realistyczne materiały, dynamiczne oświetlenie, cienie.
+- **Cascade Particle System** i **Niagara** (wprowadzone pod koniec UE4) – zaawansowane efekty cząsteczkowe.
+- **Post-Process Effects** – bloom, DOF, motion blur, volumetric fog.
+- **Animacja** – zaawansowany Animation Blueprint, retargeting, IK.
+- **Fizyka** – NVIDIA PhysX, destrukcja (Chaos w późnych wersjach).
+- **Multiplayer** – wbudowana replikacja, dedykowane serwery.
+- **Platformy** – PC, konsole, mobile, VR.
+- **Narzędzia** – Sequencer (cutsceny), Landscape tools, Persona (animacja).
+
+UE4 był darmowy do pobrania, z royalty tylko od dużych sukcesów. Ostatnia wersja (4.27) jest nadal wspierana w niektórych projektach legacy.
+
+### Unreal Engine 5 (2022–obecnie, aktualna wersja 5.7 z listopada 2025)
+
+UE5 to ogromny skok, skupiony na next-gen grafice, otwartych światach i skalowalności. Premiera pełna w 2022, ale szybki rozwój – w styczniu 2026 aktualną jest **5.7** (wydana w listopadzie 2025), z naciskiem na lifelike worlds, open worlds i produkcyjną stabilność.
+
+Kluczowe cechy i nowości (w tym z 5.4–5.7):
+- **Nanite** – wirtualizowana geometria micropolygonów: miliony polygonów bez LOD-ów, import wysokiej szczegółowości mesh'y bezpośrednio z ZBrush/Blender.
+- **Lumen** – dynamiczne global illumination i reflections w czasie rzeczywistym (bez bake'owania).
+- **Chaos Physics** – zaawansowana destrukcja, pojazdy, ragdoll.
+- **World Partition** – streaming ogromnych otwartych światów, Data Layers dla zarządzania.
+- **MetaHuman Creator** – szybkie tworzenie realistycznych ludzi (extended w 5.7).
+- **Niagara** – pełny system VFX, fluidy, modularne efekty.
+- **Animation** – Control Rig, Motion Matching, modular rigging (nowości w 5.4+).
+- **Rendering** – scalable high-fidelity (5.7), Temporal Super Resolution (TSR), Substrate materials.
+- **Motion Design Mode** (z 5.4) – narzędzia do 2D motion graphics.
+- **Procedural Content Generation (PCG)** – produkcyjne w nowszych wersjach.
+- **Multiplayer i online** – integracja z Epic Online Services.
+- **Platformy** – next-gen konsole, PC, mobile (z optymalizacjami), VR/AR.
+
+UE5 jest używany w produkcjach jak *Fortnite Chapter 5*, *Senua's Saga: Hellblade II*, *Black Myth: Wukong*. Model biznesowy: darmowy, 5% royalty po $1M przychodu (z obniżką dla niektórych).
+
+### Tabela porównawcza: Unreal Engine 4 vs Unreal Engine 5 vs Godot 4.x vs Unity 6
+
+| Kategoria              | Unreal Engine 4 (2014–2022)                  | Unreal Engine 5 (2022–obecnie, 5.7)                  | Godot 4.x (2023–obecnie)                          | Unity 6 (2024–obecnie)                              |
+|-----------------------|----------------------------------------------|-----------------------------------------------------|---------------------------------------------------|----------------------------------------------------|
+| **Renderowanie/Grafika** | PBR, dynamiczne oświetlenie, post-effects    | Nanite, Lumen, TSR, Substrate, high-fidelity open worlds | Vulkan/Forward+, SDFGI, volumetric fog, decals    | URP/HDRP, Render Graph, ray tracing, STP           |
+| **Fizyka/Destrukcja**  | PhysX, podstawowa destrukcja                | Chaos Physics, zaawansowana destrukcja              | Godot Physics + Jolt                              | PhysX + DOTS/ECS                                   |
+| **Skryptowanie**      | C++ + Blueprints                            | C++ + Blueprints + Verse (nowy język)               | GDScript 2.0 + C# + GDExtension                    | C#                                                 |
+| **Animacja**          | Animation Blueprint, retargeting            | Control Rig, Motion Matching, MetaHuman             | AnimationPlayer, Tween, Cutout                    | Mecanim + Timeline, AI-assisted                    |
+| **Światy/Otwarte**     | Landscape, podstawowy streaming             | World Partition, Data Layers, PCG                   | Podstawowe (MultiMesh, procedural)                 | GPU Resident Drawer, Adaptive Probe Volumes        |
+| **VFX/Cząsteczki**    | Cascade + Niagara (późno)                   | Niagara (pełne fluidy, modularne)                   | ParticleSystem (GPU/CPU)                          | VFX Graph                                          |
+| **Multiplayer**       | Wbudowana replikacja                        | Epic Online Services, skalowalny                    | High-level API + extensions                       | Netcode, Distributed Authority, Gaming Services    |
+| **Edytor/Narzędzia**  | Sequencer, Persona, Landscape               | Zaawansowany Sequencer, Motion Design, PCG          | Lekki, multi-window, wbudowane wszystko           | UI Toolkit, Profiler, Multiplayer Play Mode        |
+| **Licencja/Koszty**   | Darmowy + 5% royalty                        | Darmowy + 5% royalty (po $1M)                        | Darmowy, open-source (MIT)                        | Darmowy/Pro, proprietary                           |
+| **Wydajność/Skalowalność** | Dobra dla AAA                               | Next-gen, ogromne światy, mobile optymalizacje      | Lekki, multi-threaded, niskie wymagania           | Wysoka (4× CPU/GPU), mobilna                       |
+| **Główne fokus**      | AAA grafika, Blueprints                     | Next-gen realism, open worlds, MetaHumans           | Otwartość, 2D/3D zrównoważone, prostota           | Stabilność, multiplayer, AI, cross-platform         |
+
+Unreal Engine 5 (zwłaszcza 5.7) to lider w high-end 3D i realistycznej grafice AAA/next-gen, idealny dla dużych studiów. UE4 to solidna, sprawdzona baza dla starszych projektów. Godot 4.x wygrywa otwartością i lekkością (szczególnie 2D/indie), Unity 6 – wszechstronnością i ekosystemem dla mobile/cross-platform. Wybór zależy od skali: UE5 dla wizualnego spektaklu, Godot dla wolności, Unity dla szybkiego developmentu.
